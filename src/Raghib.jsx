@@ -3,22 +3,18 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import agent from "../src/assets/pic.png";
 import tick from "../src/assets/tick2.png";
-import deliver from "../src/assets/delivered.svg"
-import {
-  EllipsisVertical,
-  Paperclip,
-  Phone,
-} from "lucide-react";
+import deliver from "../src/assets/delivered.svg";
+import { EllipsisVertical, Paperclip, Phone } from "lucide-react";
 import RaghibFinal from "./RaghibFinal";
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [inputValue2, setInputValue2] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const [inputType, setInputType] = useState("");
-  const [currentOptions, setCurrentOptions] = useState([]);
+  const [inputType, setInputType] = useState<"name" | "email" | "phone" | "">("");
+  const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [finalMessage, setFinalMessage] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [switchNumber, setSwitchNumber] = useState(true);
@@ -29,16 +25,21 @@ export default function Chatbot() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: ""
+    phone: "",
   });
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const getFormattedTime = (timeString) => {
+  const getFormattedTime = (timeString: string) => {
     return timeString.split(" ")[0].split(":").slice(0, 2).join(":");
   };
 
   useEffect(() => {
     const initialMessages = [
+      {
+        text: "Hola BIenvenido a Settlement Allies! Responde el cuestionario a continuación para comunicarte con uno de Nuestros Asesores Legales, y que recibas toda la ayuda para tu Accidente!",
+        sender: "bot",
+        time: new Date().toTimeString(),
+      },
       {
         text: "¿Hubo un Reporte Policial del Accidente?",
         sender: "bot",
@@ -49,7 +50,7 @@ export default function Chatbot() {
     addMessagesWithDelay(initialMessages);
   }, []);
 
-  const addMessagesWithDelay = (botResponses) => {
+  const addMessagesWithDelay = (botResponses: any[]) => {
     let delay = 0;
     setIsTyping(true);
     botResponses.forEach((response, index) => {
@@ -71,14 +72,14 @@ export default function Chatbot() {
     });
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option: string) => {
     setMessages((prev) => [
       ...prev,
       { text: option, sender: "user", time: new Date().toTimeString() },
     ]);
     setShowInput(false);
     setCurrentOptions([]);
-    let botResponses = [];
+    let botResponses: any[] = [];
 
     if (option === "Sí" || option === "No") {
       setFormData((prev) => {
@@ -92,8 +93,7 @@ export default function Chatbot() {
           options: ["0 a 3 Meses", "3 a 6 Meses", "6 Meses a 1 Año", "1 Año o Más"],
         },
       ];
-    }
-    else if (
+    } else if (
       option === "0 a 3 Meses" ||
       option === "3 a 6 Meses" ||
       option === "6 Meses a 1 Año" ||
@@ -115,8 +115,7 @@ export default function Chatbot() {
           ],
         },
       ];
-    }
-    else if (
+    } else if (
       option === "No fui Culpable del Accidente" ||
       option === "Sí fui Culpable" ||
       option === "Una Falla Mecánica Causó el Accidente" ||
@@ -143,16 +142,24 @@ export default function Chatbot() {
   const handleSendInput = () => {
     if (inputType === "name") {
       if (inputValue.trim() === "" || inputValue2.trim() === "") return;
-      const updatedData = { ...formData, firstName: inputValue, lastName: inputValue2 };
+      const updatedData = {
+        ...formData,
+        firstName: inputValue,
+        lastName: inputValue2,
+      };
       setFormData(updatedData);
       setMessages((prev) => [
         ...prev,
-        { text: `${inputValue} ${inputValue2}`, sender: "user", time: new Date().toTimeString() },
+        {
+          text: `${inputValue} ${inputValue2}`,
+          sender: "user",
+          time: new Date().toTimeString(),
+        },
       ]);
       setInputValue("");
       setInputValue2("");
       setShowInput(false);
-      let botResponses = [
+      const botResponses = [
         {
           text: "¿Cuál es tu correo electrónico?",
           sender: "bot",
@@ -172,7 +179,7 @@ export default function Chatbot() {
       ]);
       setInputValue("");
       setShowInput(false);
-      let botResponses = [
+      const botResponses = [
         {
           text: "Ingresa tu número de teléfono",
           sender: "bot",
@@ -202,12 +209,14 @@ export default function Chatbot() {
   useEffect(() => {
     if (messagesEndRef.current) {
       const container = messagesEndRef.current.parentElement;
-      if(finalMessage){
+      if (!container) return;
+
+      if (finalMessage) {
         container.scrollTo({
           top: container.scrollHeight - container.clientHeight - 100,
           behavior: "smooth",
         });
-      }else{
+      } else {
         container.scrollTo({
           top: container.scrollHeight - container.clientHeight,
           behavior: "smooth",
@@ -215,8 +224,7 @@ export default function Chatbot() {
       }
     }
   }, [messages, finalMessage, isTyping]);
-  
-  
+
   return (
     <div
       className="w-full h-screen flex flex-col bg-cover bg-center"
@@ -234,8 +242,12 @@ export default function Chatbot() {
         <div className="flex items-center justify-between w-full">
           <div>
             <div className="flex items-center gap-3">
-              <p className="font-bold text-sm">Live Benefit Helpline</p>
-              <img src={tick} className="w-4 h-4"  style={{marginLeft:"-6px"}}/>
+              <p className="font-bold text-sm">Aliados del asentamiento</p>
+              <img
+                src={tick}
+                className="w-4 h-4"
+                style={{ marginLeft: "-6px" }}
+              />
             </div>
             <p className="text-sm ">online</p>
           </div>
@@ -312,12 +324,13 @@ export default function Chatbot() {
               transition={{ duration: 0.5 }}
               className="max-w-xs p-2 rounded-lg text-sm bg-white text-gray-800 flex items-center gap-1"
             >
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce [animation-delay:-0.3s]" />
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce [animation-delay:-0.15s]" />
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" />
             </motion.div>
           </motion.div>
         )}
+
         {showInput && (
           <div className="mt-2 flex flex-col gap-2 items-end">
             {inputType === "name" ? (
@@ -390,6 +403,7 @@ export default function Chatbot() {
             )}
           </div>
         )}
+
         {currentOptions.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2 items-center justify-start ms-10">
             {currentOptions.map((option, i) => (
@@ -403,7 +417,10 @@ export default function Chatbot() {
             ))}
           </div>
         )}
-        {finalMessage && <RaghibFinal finalMessage={finalMessage} switchNumber={switchNumber}/>}
+
+        {finalMessage && (
+          <RaghibFinal finalMessage={finalMessage} switchNumber={switchNumber} />
+        )}
 
         <div ref={messagesEndRef} />
       </div>
