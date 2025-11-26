@@ -35,10 +35,10 @@ const CallToAction = ({ finalMessage, switchNumber }) => {
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <h3 className="font-semibold">
-          Thank You
+          Gracias
         </h3>
         <p className="font-semibold">
-        Thank you for completing our form. We'll be in touch with you shortly.
+          Gracias por completar nuestro formulario. Nos pondremos en contacto contigo pronto.
         </p>
       </motion.div>
 
@@ -49,8 +49,7 @@ const CallToAction = ({ finalMessage, switchNumber }) => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
-        {switchNumber ? "CALL (323)-689-7861": "CALL (833)-366-8513"}
-        
+        {switchNumber ? "LLAMAR (323)-689-7861" : "LLAMAR (833)-366-8513"}
       </motion.a>
 
       <motion.p
@@ -59,9 +58,8 @@ const CallToAction = ({ finalMessage, switchNumber }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.8 }}
       >
-        Due to high call volume, your official agent is waiting for only{" "}
-        <span className="font-bold">3 minutes</span>, then your spot will not be
-        reserved.
+        Debido al alto volumen de llamadas, tu agente oficial solo esperará{" "}
+        <span className="font-bold">3 minutos</span>, después tu lugar dejará de estar reservado.
       </motion.p>
 
       <motion.p
